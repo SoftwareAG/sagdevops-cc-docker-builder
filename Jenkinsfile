@@ -6,6 +6,9 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr:'10'))
         disableConcurrentBuilds()
     }
+    environment {
+        COMPOSE_PROJECT_NAME = 'sagdevopsccdockerbuilder'
+    } 
     stages {
         stage("Simple") {
             environment {
