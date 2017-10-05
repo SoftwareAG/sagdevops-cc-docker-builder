@@ -1,0 +1,11 @@
+version: "3.0"
+
+services:
+  simple:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    ports:
+      - "5551:5555"      
+    volumes: 
+      - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 

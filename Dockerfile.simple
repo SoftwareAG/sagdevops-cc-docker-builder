@@ -1,0 +1,15 @@
+# MUST start with builder image to provision using template.yaml
+FROM daerepository03.eur.ad.sag:4443/ccdevops/builder as builder
+
+# this is default/lazy option for building images
+
+# expose any ports from runtimes defined in the template.yaml
+EXPOSE 5555 9999 8092 8093
+
+ENV INSTANCE_NAME=default
+
+# entrypoint scripts
+ADD *.sh $SAG_HOME/profiles/IS_$INSTANCE_NAME/bin/
+
+ENTRYPOINT $SAG_HOME/profiles/IS_$INSTANCE_NAME/bin/entrypoint-simple.sh
+#ENTRYPOINT $SAG_HOME/profiles/IS_$INSTANCE_NAME/bin/entrypoint.sh

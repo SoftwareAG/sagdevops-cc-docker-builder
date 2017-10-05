@@ -1,0 +1,32 @@
+alias: container
+
+environments:
+  default:
+     repo.product: products
+     repo.fix:     fixes
+
+layers:
+  runtime:
+    productRepo: ${repo.product}
+    fixRepo:     ${repo.fix}
+    templates:   msc-server
+
+templates:
+  msc-server:
+    fixes: []
+    products:
+      MSC:
+        default: 
+          primary.port:    5555
+          diagnostic.port: 9999
+          jmx.port:        8094
+          configuration:
+            OSGI-IS_${instance.name}:
+              COMMON-MEMORY:
+                COMMON-MEMORY:
+                  InitSize: 64
+                  MaxSize:  256
+            
+provision:
+  default:
+    runtime: local

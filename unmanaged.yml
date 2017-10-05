@@ -1,0 +1,11 @@
+version: "3.0"
+
+services:
+  unmanaged:
+    build:
+      context: .
+      dockerfile: Dockerfile.unmanaged
+    ports:
+      - "5552:5555"
+    volumes: 
+      - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 

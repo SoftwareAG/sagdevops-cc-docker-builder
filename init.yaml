@@ -1,0 +1,14 @@
+alias: init
+
+repositories:
+  product:
+    products:
+      location: http://docker.for.mac.localhost:8092/products-10.1/repository/
+      username: Administrator
+      password: manage
+  fix:             
+    fixes:
+      host: aquarius-dae.eur.ad.sag
+      name: intRepo
+      username: sum
+      password: sum      
