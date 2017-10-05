@@ -35,6 +35,7 @@ Below are examples of how to build different flavours of webMethods Microservice
 See [template.yaml] for basic webMethods Microservices Container (MSC) runtime instance definition.
 
 ```bash
+export COMPOSE_PROJECT_NAME=sagdevopsccdockerbuilder
 export COMPOSE_FILE=simple.yml
 docker-compose build
 docker images sagdevopsccdockerbuilder_simple
@@ -94,7 +95,7 @@ Also check out the containter and managed runtime in Command Central.
 Tail the logs if you need to
 
 ```bash
-docker-compose -f unmanaged.yml logs -f
+docker-compose logs -f
 ```
 
 Cleanup
