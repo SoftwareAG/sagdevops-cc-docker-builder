@@ -12,4 +12,3 @@ ENV INSTANCE_NAME=default
 ADD *.sh $SAG_HOME/profiles/IS_$INSTANCE_NAME/bin/
 
 ENTRYPOINT $SAG_HOME/profiles/IS_$INSTANCE_NAME/bin/entrypoint-simple.sh
-#ENTRYPOINT $SAG_HOME/profiles/IS_$INSTANCE_NAME/bin/entrypoint.sh
