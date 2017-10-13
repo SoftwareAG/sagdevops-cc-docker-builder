@@ -25,6 +25,8 @@ Modify [init.yaml](init.yaml) to configure product and fix repositories, poiting
       password: yourpass
 ```
 
+Add your 10.1 webMethods Microservices Container license file to the current folder as ```licenseKey.xml``` file.
+
 ## Building images
 
 To build images using Command Central composite template run
@@ -52,10 +54,10 @@ docker images
 Run all 3 types of containers:
 
 ```bash
-docker-compose up -d simple unmanaged managed
+docker-compose up -d cc simple unmanaged managed
 ```
 
-Wait up to 1 minute and access them as:
+Wait up to 2 minutes and access them as:
 
 * Simple - [http://0.0.0.0:5551/](http://0.0.0.0:5551/)
 * Unmanaged - [http://0.0.0.0:5552/](http://0.0.0.0:5552/)
