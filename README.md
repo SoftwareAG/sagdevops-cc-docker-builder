@@ -51,10 +51,16 @@ docker images
 
 ## Running containers
 
-Run all 3 types of containers:
+Start Command Central container first
 
 ```bash
-docker-compose up -d cc simple unmanaged managed
+docker-compose run --rm init
+```
+
+Start all 3 types of containers we just built:
+
+```bash
+docker-compose up -d
 ```
 
 Wait up to 2 minutes and access them as:
