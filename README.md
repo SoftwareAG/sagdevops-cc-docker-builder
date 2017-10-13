@@ -1,96 +1,95 @@
 # Command Central Docker Builder
 
-THIS IS NOT PUBLISHED YET !!!
-
 This project demonstrates how to build docker images using
-Command Central 10.1 Docker Builder.
+Command Central Docker Builder.
 
 ## Overview
 
-Command Central Docker Builder is an offical tool provided by Software AG
-on Docker Store (link to store). It leverages Command Central templates to run
-provisioning operations during Docker image build driven from a standard
-Dockerfile.
+Command Central Docker Builder is an tool provided by Software AG
+on [Docker Store](https://store.docker.com/). It leverages Command Central templates to run
+provisioning operations during Docker image build, driven from a standard Dockerfile.
 
-## Quick Start
+## Configuration
 
-Requirements:
+Modify [init.yaml](init.yaml) to configure product and fix repositories, poiting to Master 10.1 repostories on Empower using your Empower credentials or point to your local 10.1 mirrors
 
-* Docker Engine 17.09.0-ce
-* Software AG Empower credentials for software download center
-
-Get project source and provide your Empower credentials
-using environment variables:
-
-```bash
-git clone ...
-export EMPOWER_USR=yourempoweruser@youcompany.com
-export EMPOWER_PWD=yourempowerpassword
+```yaml
+  product:
+    products:
+      location: http://sdc.softwareag.com/dataservewebM101/repository/
+      username: you@company.com
+      password: yourpass
+  fix:
+    Empower:
+      username: you@company.com
+      password: yourpass
 ```
 
-Below are examples of how to build different flavours of webMethods Microservices Container images.
+## Building images
 
-## Building and testing simple base image
-
-See [template.yaml] for basic webMethods Microservices Container (MSC) runtime instance definition.
+To build images using Command Central composite template run
 
 ```bash
-export COMPOSE_PROJECT_NAME=sagdevopsccdockerbuilder
-export COMPOSE_FILE=simple.yml
 docker-compose build
-docker images sagdevopsccdockerbuilder_simple
-docker-compose up -d
 ```
 
-Wait 30 seconds and open [http://localhost:5551/] and login as Administrator/manage
+See [template.yaml](template.yaml) for basic webMethods Microservices Container (MSC) runtime instance definition.
 
-## Building and testing unmanaged image
+There are 3 flavors of images:
 
-IMPORTANT: build the simple image first.
+* [Simple](Dockerfile.simple) - easy way to build images
+* [Unmanaged](Dockerfile.unmanaged) - customized image without SPM management agent
+* [Managed](Dockerfile.managed) - customized image with SPM management agent
 
-Unmanaged image does not include Command Central agent (SPM) and thus cannot be managed
+Check image sizes:
+
+```bash
+docker images
+```
+
+## Running containers
+
+Run all 3 types of containers:
+
+```bash
+docker-compose up -d simple unmanaged managed
+```
+
+Wait up to 1 minute and access them as:
+
+* Simple - [http://0.0.0.0:5551/](http://0.0.0.0:5551/)
+* Unmanaged - [http://0.0.0.0:5552/](http://0.0.0.0:5552/)
+* Managed - [http://0.0.0.0:5553/](http://0.0.0.0:5553/)
+
+Login as Administrator/manage
+
+## Simple image
+
+There is no size optimization for this image but it is the easiest to build.
+Suitable for ad-hoc testing.
+
+Simple image comes with SPM and thus can be managed in Command Central.
+
+## Unmanaged image
+
+Unmanaged image does not include management agent (SPM) and thus cannot be managed
 by Command Central, but can be managed by an orchestration tool of your choice.
 
-```bash
-export COMPOSE_FILE=unmanaged.yml
-docker-compose build
-docker images sagdevopsccdockerbuilder_unmanaged
-docker-compose up -d
-```
-
-Wait 30 seconds and open [http://localhost:5552/] and login as Administrator/manage
-
-## Buiding and testing managed image
-
-IMPORTANT: build the simple image first.
+## Managed image
 
 Managed image includes Command Central agent (SPM) and thus:
 
 * You can monitor, administer and even configure it in Command Central
 * And still managed by an orchestration tool of your choice
 
-Bring up Command Central first
+Open [Command Central](https://0.0.0.0:8091/) to see simple and managed containers in
+the maganed landscape.
+
+You can run tests against them using Command Central API:
 
 ```bash
-export COMPOSE_FILE=managed.yml
-docker-compose run --rm init
-```
-
-When the above command completes successfully
-open [https://localhost:8091/] and login as Administrator/manage to Command Central.
-
-Build and run managed container
-
-```bash
-docker-compose build
-docker images sagdevopsccdockerbuilder_managed
 docker-compose run --rm test
 ```
-
-When the above command completes successfully
-open [http://localhost:5553/] and login as Administrator/manage
-
-Also check out the containter and managed runtime in Command Central.
 
 Tail the logs if you need to
 
@@ -98,8 +97,14 @@ Tail the logs if you need to
 docker-compose logs -f
 ```
 
-Cleanup
+## Cleanup
 
 ```bash
 docker-compose down
 ```
+
+_______________
+Contact us at [TECHcommunity](mailto:technologycommunity@softwareag.com?subject=Github/SoftwareAG) if you have any questions.
+_______________
+DISCLAIMER
+These tools are provided as-is and without warranty or support. They do not constitute part of the Software AG product suite. Users are free to use, fork and modify them, subject to the license agreement. While Software AG welcomes contributions, we cannot guarantee to include every contribution in the master project.

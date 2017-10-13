@@ -1,7 +1,6 @@
 # MUST start with builder image to run provisioning using template.yaml
 
-#FROM store/softwareag/commandcentral-builder:10.1 as builder
-#FROM daerepository03.eur.ad.sag:4443/ccdevops/builder as builder
+#FROM softwareag/commandcentral:10.1.0.1-builder as builder
 FROM sagdevopsccdockerbuilder_simple as builder
 
 # ADOPTED from docker file created by running /opt/softwareag/IntegrationServer/docker/is_container.sh createDockerfile

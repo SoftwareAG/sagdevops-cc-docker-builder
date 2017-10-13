@@ -1,0 +1,63 @@
+version: "3.0"
+
+services:
+  simple:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    ports:
+      - "5551:5555"      
+    volumes: 
+      - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
+    links:
+      - cc
+      
+  unmanaged:
+    build:
+      context: .
+      dockerfile: Dockerfile.unmanaged
+    ports:
+      - "5552:5555"
+    volumes: 
+      - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
+    depends_on: 
+      - simple
+
+  managed:
+    build:
+      context: .    
+      dockerfile: Dockerfile.managed
+    ports:
+      - "5553:5555" # http://localhost:5553
+    environment:
+      - CC_SERVER=cc
+      - CC_AUTO_REGISTER=1    
+    volumes: 
+      - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
+    links:
+      - cc      
+    depends_on: 
+      - simple
+
+  cc:
+    image: softwareag/commandcentral:10.1.0.1-server
+    ports:
+      - "8090:8090"
+      - "8091:8091"
+
+  init:
+    image: softwareag/commandcentral:10.1.0.1-server # -client-alpine
+    environment:
+      - CC_SERVER=cc
+    command: sagcc list landscape nodes local -e ONLINE -w 240
+    links:
+      - cc
+
+  test:
+    image: softwareag/commandcentral:10.1.0.1-server # -client-alpine
+    environment:
+      - CC_SERVER=cc
+    command: sagcc list monitoring state -e integrationServer-default -w 240
+    links:
+      - managed
+      - cc
