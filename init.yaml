@@ -9,10 +9,10 @@ repositories:
       location: http://sdc.softwareag.com/dataservewebM100/repository/
       username: you@company.com
       password: yourpass
-  fix:     
-    Empower:
-      username: you@company.com
-      password: yourpass
+  # fix:     
+  #   Empower:
+  #     username: you@company.com
+  #     password: yourpass
 
   # local mirror repositories
 
@@ -22,7 +22,7 @@ repositories:
   #     username: Administrator
   #     password: manage
   # fix:
-  #   products:
+  #   fixes:
   #     location: http://docker.for.mac.localhost:8092/fix-fixes-10.1/repository/
   #     username: Administrator
   #     password: manage
@@ -35,6 +35,7 @@ repositories:
   #     name: 101oct2017_SIC      
   #     username: latest
   #     password: latest
+  # fix:
   #   fixes:
   #     host: aquarius-dae.eur.ad.sag
   #     name: GA_Fix_Repo
