@@ -6,10 +6,20 @@ Command Central Docker Builder.
 ## Overview
 
 Command Central Docker Builder is an tool provided by Software AG
-on [Docker Store](https://store.docker.com/). It leverages Command Central templates to run
+on [Docker Store](https://store.docker.com/images/softwareag-commandcentral). It leverages Command Central templates to run
 provisioning operations during Docker image build, driven from a standard Dockerfile.
 
 ## Configuration
+
+Login to Docker Store with your Docker ID, open https://store.docker.com/images/softwareag-commandcentral and accept license agreement to get access
+to Command Central images.
+
+Login to Docker with your Docker ID from your console and verify you can download the images:
+
+```bash
+docker login
+docker pull store/softwareag/commandcentral:10.1.0.1-server
+```
 
 Modify [init.yaml](init.yaml) to configure product and fix repositories, poiting to Master 10.1 repostories on Empower using your Empower credentials or point to your local 10.1 mirrors
 

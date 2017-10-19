@@ -40,13 +40,13 @@ services:
       - simple
 
   cc:
-    image: softwareag/commandcentral:10.1.0.1-server
+    image: store/softwareag/commandcentral:10.1.0.1-server
     ports:
       - "8090:8090"
       - "8091:8091"
 
   init:
-    image: softwareag/commandcentral:10.1.0.1-server # -client-alpine
+    image: store/softwareag/commandcentral:10.1.0.1-server # -client-alpine
     environment:
       - CC_SERVER=cc
     command: sagcc list landscape nodes local -e ONLINE -w 240
@@ -54,7 +54,7 @@ services:
       - cc
 
   test:
-    image: softwareag/commandcentral:10.1.0.1-server # -client-alpine
+    image: store/softwareag/commandcentral:10.1.0.1-server # -client-alpine
     environment:
       - CC_SERVER=cc
     command: sagcc list monitoring state -e integrationServer-default -w 240
