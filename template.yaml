@@ -3,17 +3,17 @@ alias: container
 environments:
   default:
      repo.product: products
-     #repo.fix:     fixes
+     repo.fix:     fixes
 
 layers:
   runtime:
     productRepo: ${repo.product}
-    #fixRepo:     ${repo.fix}
+    fixRepo:     ${repo.fix}
     templates:   msc-server
 
 templates:
   msc-server:
-    #fixes: []
+    fixes: wMFix.integrationServer.Core
     products:
       MSC:
         default: 

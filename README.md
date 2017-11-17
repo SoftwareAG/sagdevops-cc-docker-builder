@@ -30,7 +30,8 @@ Modify [init.yaml](init.yaml) to configure product and fix repositories, poiting
       username: you@company.com
       password: yourpass
   fix:
-    Empower:
+    fixes:
+      location: http://sdc.softwareag.com/updates/prodRepo
       username: you@company.com
       password: yourpass
 ```
@@ -98,7 +99,7 @@ by Command Central, but can be managed by an orchestration tool of your choice.
 Managed image includes Command Central agent (SPM) and thus:
 
 * You can monitor, administer and even configure it in Command Central
-* And still managed by an orchestration tool of your choice
+* And still manage by an orchestration tool of your choice
 
 Open [Command Central](https://0.0.0.0:8091/) to see simple and managed containers in
 the maganed landscape.

@@ -2,19 +2,20 @@ alias: init
 
 repositories:
   
-  # public repositories
+  ### public repositories
 
   product:
     products:           
-      location: http://sdc.softwareag.com/dataservewebM100/repository/
+      location: http://sdc.softwareag.com/dataservewebM101/repository/
       username: you@company.com
       password: yourpass
-  # fix:     
-  #   Empower:
-  #     username: you@company.com
-  #     password: yourpass
+  fix:     
+    fixes:
+      location: http://sdc.softwareag.com/updates/prodRepo
+      username: you@company.com
+      password: yourpass
 
-  # local mirror repositories
+  ### local mirror repositories
 
   # product:
   #   products:
@@ -27,7 +28,7 @@ repositories:
   #     username: Administrator
   #     password: manage
   
-  # private SAG repositories
+  ### private SAG repositories
 
   # product:
   #   products:
