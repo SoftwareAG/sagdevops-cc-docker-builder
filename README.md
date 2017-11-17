@@ -121,6 +121,17 @@ docker-compose logs -f
 docker-compose down
 ```
 
+## Troubleshooting
+
+### Running on Windows host
+
+Your Docker build runs on Windows and fails, ensure that git client uses UNIX crlf instead of Windows.
+Change git configuration and re-clone the repository
+
+```bash
+git config --global core.autocrlf false
+```
+
 _______________
 Contact us at [TECHcommunity](mailto:technologycommunity@softwareag.com?subject=Github/SoftwareAG) if you have any questions.
 _______________
