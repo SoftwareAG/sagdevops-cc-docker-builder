@@ -1,0 +1,33 @@
+version: "3.0"
+
+services:
+  unmanaged:
+    build:
+      context: .
+      dockerfile: Dockerfile.unmanaged
+    image: softwareag/umserver:10.1
+    ports:
+      - "9000:9000"
+    volumes: 
+      - ./licenseKey.xml:/opt/softwareag/UniversalMessaging/server/license/licence.xml
+
+  managed:
+    build:
+      context: .    
+      dockerfile: Dockerfile.managed
+    image: softwareag/umserver_managed:10.1
+    ports:
+      - "9001:9000"
+    environment:
+      - CC_SERVER=cc
+      - CC_AUTO_REGISTER=1
+    volumes: 
+      - ./licenseKey.xml:/opt/softwareag/UniversalMessaging/server/template/licence.xml
+    links:
+      - cc      
+    
+  cc:
+    image: store/softwareag/commandcentral:10.1.0.1-server
+    ports:
+      - "8090:8090"
+      - "8091:8091"

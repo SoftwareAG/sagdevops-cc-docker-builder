@@ -1,0 +1,14 @@
+# MUST start with builder image to run provisioning using template.yaml
+
+FROM store/softwareag/commandcentral:10.1.0.1-builder as builder
+
+# This is the same as the unmanaged one + management support
+FROM softwareag/umserver:10.1
+
+### ADD management support
+ENV CC_CLI_HOME=$SAG_HOME/CommandCentral/client
+ENV PATH=$PATH:$CC_CLI_HOME/bin
+COPY --from=builder $SAG_HOME/profiles/SPM/ $SAG_HOME/profiles/SPM/
+COPY --from=builder $SAG_HOME/CommandCentral/client/ $SAG_HOME/CommandCentral/client/
+EXPOSE 8092 8093
+### end manage
