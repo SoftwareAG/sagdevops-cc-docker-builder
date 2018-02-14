@@ -122,6 +122,19 @@ docker-compose logs -f
 docker-compose down
 ```
 
+## Adoping templates to work with Command Central Docker Builder 10.1
+
+> Command Central Docker Builder 10.1 has the following requirements for the template.yaml:
+
+* The template alias MUST be *container*, e.g. `alias: container`
+* The template MUST use repositories named *products* and *fixes* to match those defined in `init.yaml` file
+* There MUST be no required parameters in the template. All parameters MUST have default values
+* The template MUST provision the layer(s) to the `local` node alias
+
+See the difference between [adopted template.yaml](template.yaml) and [original template.yaml](https://github.com/SoftwareAG/sagdevops-templates/blob/master/templates/sag-msc-server/template.yaml) for MSC basic template.
+
+> The above limitations are planned to be removed in the upcoming Command Central Builder release to allow seamless use of the same templates for VMs and containers
+
 ## Troubleshooting
 
 ### Running on Windows host
