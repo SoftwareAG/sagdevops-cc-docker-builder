@@ -1,0 +1,28 @@
+alias: init
+
+environments:
+  default:  # Input parameters
+    # repo locations to internal Command Central mirrors 
+    # (repo locations are listed from the CCE repository listing in column "location")
+    repo.products.location: http://mycce.internal.com:8092/@PRODUCT_MIRROR_REPO_NAME@/repository/
+    repo.fixes.location: http://mycce.internal.com:8092/@PRODUCT_FIX_REPO_NAME@/repository/
+    repo.username: @CCE User@           # REQUIRED, repo username
+    repo.password: @CCE Password@       # REQUIRED, repo password
+
+    ### this section is for empower    
+    #repo.products.location: http://sdc.softwareag.com/dataservewebM101/repository/
+    #repo.fixes.location: http://sdc.softwareag.com/updates/prodRepo
+    #repo.username: empoweruser@email.com            # REQUIRED, repo username
+    #repo.password: empowerpassword                  # REQUIRED, repo password
+    
+repositories:
+  product:
+    products:           
+      location: ${repo.products.location}
+      username: ${repo.username}
+      password: ${repo.password}
+  fix:     
+    fixes:
+      location: ${repo.fixes.location}
+      username: ${repo.username}
+      password: ${repo.password}
