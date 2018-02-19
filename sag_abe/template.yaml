@@ -1,0 +1,26 @@
+alias: container
+description: Software AG Asset Build Environment
+
+environments:
+  default:  
+    repo.product: products
+    repo.fix:     fixes
+    abe.fixes:
+      - wMFix.acdl
+
+layers:
+  abe:
+    productRepo: ${repo.product}            # install products from
+    fixRepo:     ${repo.fix}                # install fixes from
+    templates:   
+      - abe
+
+templates:
+  abe:
+    fixes: ${abe.fixes}
+    products:
+      acdl:
+
+provision:
+  default:
+    abe: local
