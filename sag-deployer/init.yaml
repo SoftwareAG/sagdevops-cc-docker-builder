@@ -6,8 +6,8 @@ environments:
     # (repo locations are listed from the CCE repository listing in column "location")
     repo.products.location: http://mycce.internal.com:8092/@PRODUCT_MIRROR_REPO_NAME@/repository/
     repo.fixes.location: http://mycce.internal.com:8092/@PRODUCT_FIX_REPO_NAME@/repository/
-    repo.username: @CCE User@           # REQUIRED, repo username
-    repo.password: @CCE Password@       # REQUIRED, repo password
+    repo.username: @CCE_User@           # REQUIRED, repo username
+    repo.password: @CCE_Password@       # REQUIRED, repo password
 
     ### this section is for empower    
     #repo.products.location: http://sdc.softwareag.com/dataservewebM101/repository/
