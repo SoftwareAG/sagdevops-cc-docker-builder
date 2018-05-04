@@ -9,7 +9,7 @@ env:
 before_install:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
     # EMPOWER_USERNAME and EMPOWER_PASSWORD must be set in the project settings
-  - envsubst < init-$RELEASE.yaml > init.yaml
+  - envsubst < init-$RELEASE.yaml > init.yaml && cat init.yaml
 
 script: 
   - docker-compose build simple
