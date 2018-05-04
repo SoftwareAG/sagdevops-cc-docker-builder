@@ -1,6 +1,8 @@
 # Command Central Docker Builder
 
-This project demonstrates how to build docker images using
+[![Build Status](https://travis-ci.org/SoftwareAG/sagdevops-cc-docker-builder.svg?branch=master)](https://travis-ci.org/SoftwareAG/sagdevops-cc-docker-builder)
+
+This project demonstrates how to build Docker images using
 Command Central Docker Builder.
 
 ## Overview
@@ -21,7 +23,7 @@ docker login
 docker pull store/softwareag/commandcentral:10.1-server
 ```
 
-Copy init-10.1.yaml into init.yaml files and modify it
+Copy init-10.1.yaml into init.yaml file and update it
 with your Empower credentials (email and password):
 
 ```yaml
@@ -43,7 +45,7 @@ For CI you can use the following method:
 export RELEASE=10.1
 export EMPOWER_USERNAME=you@company.com
 export EMPOWER_PASSWORD=youpass
-envsubst < init-$RELEASE.yaml.template > init.yaml
+envsubst < init-$RELEASE.yaml > init.yaml
 ```
 
 ## Building images
@@ -68,7 +70,7 @@ There are 3 flavors of images:
 * [Unmanaged](Dockerfile.unmanaged) - customized image without SPM management agent
 * [Managed](Dockerfile.managed) - customized image with SPM management agent
 
-Build the second and third by running:
+Build the unmanaged and managed images by running:
 
 ```bash
 docker-compose build unmanaged managed
@@ -104,29 +106,29 @@ Managed image includes Command Central agent (SPM) and thus:
 
 * You can monitor, administer and even configure it in Command Central
 * And still manage by an orchestration tool of your choice
-* Adds only a small overhead in terms of image size (~40mb) and a second process within the container
+* The cost is a small overhead in terms of image size (~40mb) and a second process within the container
 
 ## Running containers
 
-Let run containers from the images we just built.
+Let's run containers from the images we just built.
 
-### Providing license file
+### License key
 
-If you want the containers to run for more than 30 minutes, provide a valid Software AG license file:
+If you want the containers to run for more than 30 minutes, provide a valid Software AG license key:
 
-* Copy 10.x webMethods Microservices Container or Integration Server license to the current folder and save it as ```licenseKey.xml``` file.
-* Uncomment volume mappings for the license file in docker-compose.yml:
+* Copy 10.x webMethods Microservices Container or Integration Server license key file to the current folder and name it ```licenseKey.xml```.
+* Uncomment volume mappings for the license key file in the [docker-compose.yml](docker-compose.xml):
 
 ```yaml
     volumes:
       - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml
 ```
 
-If you don't have your license handy, just skip this step.
+If you don't have your license key file handy, just skip this step.
 
 ### Running unmanaged containers
 
-Start unmanaged container by simply running this command:
+Start unmanaged container by running this command:
 
 ```bash
 docker-compose up -d unmanaged
@@ -137,7 +139,7 @@ Creating sagdevops-cc-docker-builder_unmanaged_1 ... done
 ```
 
 Wait until container comes up.
-You can monitor the log using this command until you this ONLINE statement:
+You can monitor the log using this command until you see ONLINE statement like this:
 
 ```bash
 docker-compose logs -f unmanaged
@@ -149,17 +151,17 @@ unmanaged_1  | Integration Server is ONLINE at ...
 Stop tailing the log by pressing Ctrl+C.
 
 Open Integration Server Admin UI at [http://0.0.0.0:5552/](http://0.0.0.0:5552/)
-Login as Administrator/manage
+and login as Administrator/manage.
 
 Congratuations!
 
-This is your custom-built webMethods Microservices Runtime container for 10.1 with the latest fixes
-and basic configuration.
+This is your custom-built webMethods Microservices Runtime container v10.1 with the latest core fixes
+and basic configuration applied built from a simple Command Central YAML template!
 
 ### Running managed containers
 
-To take advantage of the management capabilities privided by Command Central
-we can run managed containers.
+We can take advantage of the management capabilities privided by Command Central not just at the image
+build time, but at container runtime as well.
 
 Start Command Central container first:
 
@@ -175,12 +177,9 @@ Wait until the command completes.
 
 Open [Command Central](https://0.0.0.0:8091/) and login as Administrator/manage.
 
-> NOTE that Command Central images comes from Docker Store. We did not build or customize it anyhow.
+> NOTE that Command Central image comes from Docker Store. We did not build or customize it anyhow.
 
 Click on the Installations tab and notice that the list of managed installations includes only 'local' node.
-
-to see simple and managed containers in
-the maganed landscape.
 
 Start managed container by running:
 
@@ -189,7 +188,7 @@ docker-compose up -d managed
 docker-compose logs -f managed
 
 ...
-managed_1    | Registering 'msc' with Command Central server 'cc' ...
+managed_1    | Registering '...' with Command Central server 'cc' ...
 managed_1    | 200 OK
 
 managed_1    | 2018-05-04 17:04:55 UTC [ISP.0046.0012I] Enabling HTTP Listener on port 5555
@@ -199,20 +198,31 @@ managed_1    | Integration Server is ONLINE at http://9eef625c9410:5555/
 
 Stop tailing the log by pressing Ctrl+C.
 
-Check Command Central Web UI Installations and Instances tabs and notice
-Integration Server runtime instance is automatialy discovered and registred
+Open Integration Server Admin UI at [http://0.0.0.0:5553/](http://0.0.0.0:5553/)
+and login as Administrator/manage.
+
+Open Command Central Web UI Installations and Instances tabs and notice
+this Integration Server runtime instance is automatialy discovered and registred
 within Command Central managed landscape.
 
-Open Integration Server Admin UI at [http://0.0.0.0:5553/](http://0.0.0.0:5553/)
-Login as Administrator/manage
+> You may need to click refresh icon to speed up the auto-update process
 
-Run simple smoke tests against managed containers using Command Central API:
+You can view its status, monitoring KPIs, logs, configuration, fix levels, etc.
+Everything you can do with Integration Server running on a VM.
+
+You can even run simple smoke tests against managed containers using Command Central API
+to verify successful setup:
 
 ```bash
 docker-compose run --rm test
 ```
 
-See 'test' container command in docker-compose.yml for details.
+> See 'test' container command in docker-compose.yml for details.
+
+Congratulations!
+
+You can now build managed and unmanaged Docker images for Software AG products using
+Command Central Docker Builder and composite templates.
 
 ## Cleanup
 
