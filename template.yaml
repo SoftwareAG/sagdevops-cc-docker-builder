@@ -1,19 +1,9 @@
 alias: container
 
-environments:
-  default:
-     repo.product: products
-     repo.fix:     fixes
-
-layers:
-  runtime:
-    productRepo: ${repo.product}
-    fixRepo:     ${repo.fix}
-    templates:   msc-server
-
 templates:
   msc-server:
-    fixes: wMFix.integrationServer.Core
+    fixes: 
+      - wMFix.integrationServer.Core
     products:
       MSC:
         default: 
@@ -27,6 +17,12 @@ templates:
                   InitSize: 64
                   MaxSize:  256
             
+layers:
+  runtime:
+    productRepo: products
+    fixRepo:     fixes
+    templates:   msc-server
+
 provision:
   default:
     runtime: local

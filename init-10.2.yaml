@@ -6,14 +6,14 @@ repositories:
 
   product:
     products:           
-      location: http://sdc.softwareag.com/dataservewebM101/repository/
-      username: "sergei.pogrebnyak@softwareag.com"
-      password: "SergeDoc77"
+      location: http://sdc.softwareag.com/dataservewebM102/repository/
+      username: "$EMPOWER_USERNAME"
+      password: "$EMPOWER_PASSWORD"
   fix:     
     fixes:
       location: http://sdc.softwareag.com/updates/prodRepo
-      username: "sergei.pogrebnyak@softwareag.com"
-      password: "SergeDoc77"
+      username: "$EMPOWER_USERNAME"
+      password: "$EMPOWER_PASSWORD"
 
   ### local mirror repositories
 

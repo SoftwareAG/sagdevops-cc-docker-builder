@@ -18,10 +18,11 @@ Login to Docker with your Docker ID from your console and verify you can downloa
 
 ```bash
 docker login
-docker pull store/softwareag/commandcentral:10.1.0.1-server
+docker pull store/softwareag/commandcentral:10.1-server
 ```
 
-Modify [init.yaml](init.yaml) to configure product and fix repositories, poiting to Master 10.1 repostories on Empower using your Empower credentials or point to your local 10.1 mirrors
+Copy [init-10.1.yaml.template](init.yaml.template) into init.yaml files and modify it
+with your Empower credentials (email and password):
 
 ```yaml
   product:
@@ -36,17 +37,30 @@ Modify [init.yaml](init.yaml) to configure product and fix repositories, poiting
       password: yourpass
 ```
 
-Add your 10.1 webMethods Microservices Container license file to the current folder as ```licenseKey.xml``` file.
+For CI you can use the following method:
+
+```bash
+export RELEASE=10.1
+export EMPOWER_USERNAME=you@company.com
+export EMPOWER_PASSWORD=youpass
+envsubst < init-$RELEASE.yaml.template > init.yaml
+```
 
 ## Building images
 
-To build images using Command Central composite template run
+To build simple image using Command Central composite template run:
 
 ```bash
-docker-compose build
+docker-compose build simple
+
+...
+Successfully tagged managed/msc:10.1
 ```
 
-See [template.yaml](template.yaml) for basic webMethods Microservices Container (MSC) runtime instance definition.
+It may take up to 20 minutes to download the binaries and build the image.
+
+While it is building, check out [template.yaml](template.yaml) that is used for building
+this image with basic webMethods Microservices Container (MSC) runtime instance definition.
 
 There are 3 flavors of images:
 
@@ -54,67 +68,151 @@ There are 3 flavors of images:
 * [Unmanaged](Dockerfile.unmanaged) - customized image without SPM management agent
 * [Managed](Dockerfile.managed) - customized image with SPM management agent
 
+Build the second and third by running:
+
+```bash
+docker-compose build unmanaged managed
+...
+Successfully tagged managed/msc:10.1
+```
+
 Check image sizes:
 
 ```bash
-docker images
+docker images | grep msc
+
+managed/msc     10.1    195596d9c020        Less than a second ago   1.56GB
+unmanaged/msc   10.1    3009317db4a8        Less than a second ago   1.52GB
+simple/msc      10.1    cfe3a4674b31        6 minutes ago            2.5GB
 ```
 
-## Running containers
-
-Start Command Central container first
-
-```bash
-docker-compose run --rm init
-```
-
-Start all 3 types of containers we just built:
-
-```bash
-docker-compose up -d
-```
-
-Wait up to 2 minutes and access them as:
-
-* Simple - [http://0.0.0.0:5551/](http://0.0.0.0:5551/)
-* Unmanaged - [http://0.0.0.0:5552/](http://0.0.0.0:5552/)
-* Managed - [http://0.0.0.0:5553/](http://0.0.0.0:5553/)
-
-Login as Administrator/manage
-
-## Simple image
+### Simple image
 
 There is no size optimization for this image but it is the easiest to build.
 Suitable for ad-hoc testing.
 
 Simple image comes with SPM and thus can be managed in Command Central.
 
-## Unmanaged image
+### Unmanaged image
 
 Unmanaged image does not include management agent (SPM) and thus cannot be managed
 by Command Central, but can be managed by an orchestration tool of your choice.
 
-## Managed image
+### Managed image
 
 Managed image includes Command Central agent (SPM) and thus:
 
 * You can monitor, administer and even configure it in Command Central
 * And still manage by an orchestration tool of your choice
+* Adds only a small overhead in terms of image size (~40mb) and a second process within the container
 
-Open [Command Central](https://0.0.0.0:8091/) to see simple and managed containers in
+## Running containers
+
+Let run containers from the images we just built.
+
+### Providing license file
+
+If you want the containers to run for more than 30 minutes, provide a valid Software AG license file:
+
+* Copy 10.x webMethods Microservices Container or Integration Server license to the current folder and save it as ```licenseKey.xml``` file.
+* Uncomment volume mappings for the license file in docker-compose.yml:
+
+```yaml
+    volumes:
+      - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml
+```
+
+If you don't have your license handy, just skip this step.
+
+### Running unmanaged containers
+
+Start unmanaged container by simply running this command:
+
+```bash
+docker-compose up -d unmanaged
+
+...
+sagdevops-cc-docker-builder_cc_1 is up-to-date
+Creating sagdevops-cc-docker-builder_unmanaged_1 ... done
+```
+
+Wait until container comes up.
+You can monitor the log using this command until you this ONLINE statement:
+
+```bash
+docker-compose logs -f unmanaged
+
+...
+unmanaged_1  | Integration Server is ONLINE at ...
+```
+
+Stop tailing the log by pressing Ctrl+C.
+
+Open Integration Server Admin UI at [http://0.0.0.0:5552/](http://0.0.0.0:5552/)
+Login as Administrator/manage
+
+Congratuations!
+
+This is your custom-built webMethods Microservices Runtime container for 10.1 with the latest fixes
+and basic configuration.
+
+### Running managed containers
+
+To take advantage of the management capabilities privided by Command Central
+we can run managed containers.
+
+Start Command Central container first:
+
+```bash
+docker-compose run --rm init
+...
+Alias   Name    Status  Url Host        Url Port        Location Id     Installation Type
+local   Local   ONLINE  localhost           8092
+The expected values were successfully retrieved after 13 calls within 181 seconds.
+```
+
+Wait until the command completes.
+
+Open [Command Central](https://0.0.0.0:8091/) and login as Administrator/manage.
+
+> NOTE that Command Central images comes from Docker Store. We did not build or customize it anyhow.
+
+Click on the Installations tab and notice that the list of managed installations includes only 'local' node.
+
+to see simple and managed containers in
 the maganed landscape.
 
-You can run tests against them using Command Central API:
+Start managed container by running:
+
+```bash
+docker-compose up -d managed
+docker-compose logs -f managed
+
+...
+managed_1    | Registering 'msc' with Command Central server 'cc' ...
+managed_1    | 200 OK
+
+managed_1    | 2018-05-04 17:04:55 UTC [ISP.0046.0012I] Enabling HTTP Listener on port 5555
+...
+managed_1    | Integration Server is ONLINE at http://9eef625c9410:5555/
+```
+
+Stop tailing the log by pressing Ctrl+C.
+
+Check Command Central Web UI Installations and Instances tabs and notice
+Integration Server runtime instance is automatialy discovered and registred
+within Command Central managed landscape.
+
+Open Integration Server Admin UI at [http://0.0.0.0:5553/](http://0.0.0.0:5553/)
+Login as Administrator/manage
+
+Run simple smoke tests against managed containers using Command Central API:
 
 ```bash
 docker-compose run --rm test
 ```
 
-Tail the logs if you need to
-
-```bash
-docker-compose logs -f
-```
+See 'test' container command in docker-compose.yml for details.
 
 ## Cleanup
 
@@ -122,7 +220,7 @@ docker-compose logs -f
 docker-compose down
 ```
 
-## Adoping templates to work with Command Central Docker Builder 10.1
+## Adapting templates to work with Command Central Docker Builder 10.1
 
 > Command Central Docker Builder 10.1 has the following requirements for the template.yaml:
 
@@ -133,7 +231,7 @@ docker-compose down
 
 See the difference between [adopted template.yaml](template.yaml) and [original template.yaml](https://github.com/SoftwareAG/sagdevops-templates/blob/master/templates/sag-msc-server/template.yaml) for MSC basic template.
 
-> The above limitations are planned to be removed in the upcoming Command Central Builder release to allow seamless use of the same templates for VMs and containers
+> The above limitations will be removed removed in the upcoming releases of Command Central Builder 10.2 to allow seamless use of the same templates for VMs and containers
 
 ## Troubleshooting
 

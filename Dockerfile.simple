@@ -1,5 +1,6 @@
 # MUST start with builder image to provision using template.yaml
-FROM store/softwareag/commandcentral:10.1.0.1-builder as builder
+ARG RELEASE=10.1
+FROM store/softwareag/commandcentral:$RELEASE-builder as builder
 
 # this is default/lazy option for building images
 

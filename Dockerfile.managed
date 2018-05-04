@@ -1,56 +1,14 @@
-# MUST start with builder image to run provisioning using template.yaml
+ARG RELEASE=10.1
+FROM simple/msc:$RELEASE as builder
+FROM unmanaged/msc:$RELEASE as base
 
-#FROM store/softwareag/commandcentral:10.1.0.1-builder as builder
-FROM sagdevopsccdockerbuilder_simple as builder
-
-# ADOPTED from docker file created by running /opt/softwareag/IntegrationServer/docker/is_container.sh createDockerfile
-FROM centos:7
-
-ENV SAG_HOME=/opt/softwareag
-ENV JAVA_HOME $SAG_HOME/jvm/jvm/
-ENV JRE_HOME $SAG_HOME/jvm/jvm/jre/
-ENV INSTANCE_NAME=default
-
-WORKDIR $SAG_HOME
-
-COPY --from=builder $SAG_HOME/jvm/jvm/ $SAG_HOME/jvm/jvm/
-
-COPY --from=builder $SAG_HOME/install/jars/ $SAG_HOME/install/jars/
-COPY --from=builder $SAG_HOME/install/profile/ $SAG_HOME/install/profile/
-COPY --from=builder $SAG_HOME/install/products/ $SAG_HOME/install/products/
-
-COPY --from=builder $SAG_HOME/Licenses/sagosch $SAG_HOME/Licenses/sagosch
-
-COPY --from=builder $SAG_HOME/common/bin/ $SAG_HOME/common/bin/
-COPY --from=builder $SAG_HOME/common/conf/ $SAG_HOME/common/conf/
-COPY --from=builder $SAG_HOME/common/db/ $SAG_HOME/common/db/
-COPY --from=builder $SAG_HOME/common/lib/ $SAG_HOME/common/lib/
-COPY --from=builder $SAG_HOME/common/runtime/ $SAG_HOME/common/runtime/
-
-COPY --from=builder $SAG_HOME/WS-Stack/ $SAG_HOME/WS-Stack/
-
-COPY --from=builder $SAG_HOME/IntegrationServer/bin/ $SAG_HOME/IntegrationServer/bin/
-COPY --from=builder $SAG_HOME/IntegrationServer/lib/ $SAG_HOME/IntegrationServer/lib/
-COPY --from=builder $SAG_HOME/IntegrationServer/updates/ $SAG_HOME/IntegrationServer/updates/
-COPY --from=builder $SAG_HOME/IntegrationServer/.tc.dev.log4j.properties $SAG_HOME/IntegrationServer/.tc.dev.log4j.properties
-
-# instances
-COPY --from=builder $SAG_HOME/IntegrationServer/instances/ $SAG_HOME/IntegrationServer/instances/
-# profile
-COPY --from=builder $SAG_HOME/profiles/IS_${INSTANCE_NAME}/ $SAG_HOME/profiles/IS_${INSTANCE_NAME}/
-
-EXPOSE 5555 9999
-
-LABEL com.softwareag.product="IntegrationServer" \com.softwareag.product.version="10.1.0.0" \com.softwareag.webmethodscloud.primaryPort="5555"
-
-ADD *.sh $SAG_HOME/profiles/IS_$INSTANCE_NAME/bin/
-
-ENTRYPOINT $SAG_HOME/profiles/IS_$INSTANCE_NAME/bin/entrypoint.sh
-
-### ADD management support
-ENV CC_CLI_HOME=$SAG_HOME/CommandCentral/client
-ENV PATH=$PATH:$CC_CLI_HOME/bin
+# add SPM and CLI binaries
 COPY --from=builder $SAG_HOME/profiles/SPM/ $SAG_HOME/profiles/SPM/
 COPY --from=builder $SAG_HOME/CommandCentral/client/ $SAG_HOME/CommandCentral/client/
+
+# CLI support
+ENV CC_CLI_HOME=$SAG_HOME/CommandCentral/client
+ENV PATH=$PATH:$CC_CLI_HOME/bin
+
+# SPM ports
 EXPOSE 8092 8093
-### end manage

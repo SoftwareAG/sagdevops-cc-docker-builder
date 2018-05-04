@@ -1,8 +1,7 @@
-# MUST start with builder image to run provisioning using template.yaml
-# FROM store/softwareag/commandcentral:10.1.0.1-builder as builder
-FROM sagdevopsccdockerbuilder_simple as builder
+ARG RELEASE=10.1
+FROM simple/msc:$RELEASE as builder
 
-# ADOPTED from docker file created by running /opt/softwareag/IntegrationServer/docker/is_container.sh createDockerfile
+# ADAPTED from docker file created by running /opt/softwareag/IntegrationServer/docker/is_container.sh createDockerfile
 FROM centos:7
 
 ENV SAG_HOME=/opt/softwareag
@@ -35,13 +34,12 @@ COPY --from=builder $SAG_HOME/IntegrationServer/.tc.dev.log4j.properties $SAG_HO
 
 # instances
 COPY --from=builder $SAG_HOME/IntegrationServer/instances/ $SAG_HOME/IntegrationServer/instances/
-# profile
 COPY --from=builder $SAG_HOME/profiles/IS_${INSTANCE_NAME}/ $SAG_HOME/profiles/IS_${INSTANCE_NAME}/
 
 EXPOSE 5555 9999
 
 LABEL com.softwareag.product="IntegrationServer" \com.softwareag.product.version="10.1.0.0" \com.softwareag.webmethodscloud.primaryPort="5555"
 
-ADD *.sh $SAG_HOME/profiles/IS_$INSTANCE_NAME/bin/
+ADD *.sh $SAG_HOME/
 
-ENTRYPOINT $SAG_HOME/profiles/IS_$INSTANCE_NAME/bin/entrypoint.sh
+ENTRYPOINT $SAG_HOME/entrypoint.sh

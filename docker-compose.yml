@@ -2,54 +2,57 @@ version: "3.0"
 
 services:
   simple:
+    image: simple/msc:$RELEASE
     build:
       context: .
       dockerfile: Dockerfile.simple
-    ports:
-      - "5551:5555"      
-    volumes: 
-      - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
-    links:
-      - cc
-    environment:
-      - CC_SERVER=cc
-      - CC_AUTO_REGISTER=1
-            
+    # ports:
+    #   - "5551:5555"      
+    # volumes: 
+    #   - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
+    # links:
+    #   - cc
+    # environment:
+    #   - CC_SERVER=cc
+    #   - CC_AUTO_REGISTER=1
+
   unmanaged:
+    image: unmanaged/msc:$RELEASE
     build:
       context: .
       dockerfile: Dockerfile.unmanaged
     ports:
       - "5552:5555"
-    volumes: 
-      - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
+    # volumes: 
+    #   - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
     depends_on: 
       - simple
 
   managed:
+    image: managed/msc:$RELEASE
     build:
       context: .    
       dockerfile: Dockerfile.managed
+    #hostname: msc
     ports:
       - "5553:5555" # http://localhost:5553
     environment:
       - CC_SERVER=cc
       - CC_AUTO_REGISTER=1    
-    volumes: 
-      - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
+    # volumes: 
+    #   - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
     links:
       - cc      
     depends_on: 
-      - simple
+      - unmanaged
 
   cc:
-    image: store/softwareag/commandcentral:10.1.0.1-server
+    image: store/softwareag/commandcentral:$RELEASE-server
     ports:
-      - "8090:8090"
-      - "8091:8091"
+      - "8091:8091" # http://localhost:8091
 
   init:
-    image: store/softwareag/commandcentral:10.1.0.1-server # -client-alpine
+    image: store/softwareag/commandcentral:$RELEASE-server
     environment:
       - CC_SERVER=cc
     command: sagcc list landscape nodes local -e ONLINE -w 240
@@ -57,10 +60,18 @@ services:
       - cc
 
   test:
-    image: store/softwareag/commandcentral:10.1.0.1-server # -client-alpine
+    image: store/softwareag/commandcentral:$RELEASE-server
     environment:
       - CC_SERVER=cc
-    command: sagcc list monitoring state -e integrationServer-default -w 240
     links:
       - managed
       - cc
+    command: >
+      bash -c '
+      echo "Checking managed container auto registration ..." &&
+      sagcc list landscape nodes properties=alias,description -e "Auto registered docker node" &&
+      echo "Checking MSC instance ..." &&
+      sagcc list inventory components -e integrationServer-default &&
+      echo "Checking MSC state ..." &&
+      sagcc list monitoring state -e "Response Time"
+      '

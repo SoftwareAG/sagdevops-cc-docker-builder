@@ -1,0 +1,23 @@
+sudo: required
+
+services:
+  - docker
+
+matrix:
+    - RELEASE=10.1
+#    - RELEASE=10.2
+
+before_install:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+    # EMPOWER_USERNAME and EMPOWER_PASSWORD must be set in the project settings
+  - envsubst < init-$RELEASE.yaml.template > init.yaml
+
+script: 
+  - docker-compose build simple
+  - docker-compose build unmanaged managed
+  - docker images | grep msc
+  - docker-compose run --rm init
+  - docker-compose up -d managed
+  - docker-compose run --rm test
+  - docker-compose logs
+  - docker-compose down
