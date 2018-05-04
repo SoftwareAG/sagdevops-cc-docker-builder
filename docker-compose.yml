@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.simple
+      args: 
+        - RELEASE
     # ports:
     #   - "5551:5555"      
     # volumes: 
@@ -21,6 +23,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.unmanaged
+      args: 
+        - RELEASE
     ports:
       - "5552:5555"
     # volumes: 
@@ -33,6 +37,8 @@ services:
     build:
       context: .    
       dockerfile: Dockerfile.managed
+      args: 
+        - RELEASE
     #hostname: msc
     ports:
       - "5553:5555" # http://localhost:5553
