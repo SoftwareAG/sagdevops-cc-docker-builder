@@ -21,7 +21,7 @@ docker login
 docker pull store/softwareag/commandcentral:10.1-server
 ```
 
-Copy [init-10.1.yaml.template](init.yaml.template) into init.yaml files and modify it
+Copy init-10.1.yaml into init.yaml files and modify it
 with your Empower credentials (email and password):
 
 ```yaml
