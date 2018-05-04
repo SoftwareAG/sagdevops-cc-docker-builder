@@ -29,9 +29,7 @@ services:
       - "5552:5555"
     # volumes: 
     #   - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
-    depends_on: 
-      - simple
-
+ 
   managed:
     image: managed/msc:$RELEASE
     build:
@@ -49,8 +47,6 @@ services:
     #   - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
     links:
       - cc      
-    depends_on: 
-      - unmanaged
 
   cc:
     image: store/softwareag/commandcentral:$RELEASE-server
@@ -77,7 +73,7 @@ services:
       echo "Checking managed container auto registration ..." &&
       sagcc list landscape nodes properties=alias,description -e "Auto registered docker node" &&
       echo "Checking MSC instance ..." &&
-      sagcc list inventory components -e integrationServer-default &&
+      sagcc list inventory components -e integrationServer-default -w 240 &&
       echo "Checking MSC state ..." &&
-      sagcc list monitoring state -e "Response Time"
+      sagcc list monitoring state -e "Response Time" -w 240
       '

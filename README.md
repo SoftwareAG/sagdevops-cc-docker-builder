@@ -1,7 +1,5 @@
 # Command Central Docker Builder
 
-[![Build Status](https://travis-ci.org/SoftwareAG/sagdevops-cc-docker-builder.svg?branch=master)](https://travis-ci.org/SoftwareAG/sagdevops-cc-docker-builder)
-
 This project demonstrates how to build Docker images using
 Command Central Docker Builder.
 
@@ -205,19 +203,20 @@ Open Command Central Web UI Installations and Instances tabs and notice
 this Integration Server runtime instance is automatialy discovered and registred
 within Command Central managed landscape.
 
-> You may need to click refresh icon to speed up the auto-update process
+Within Command Central Web UI you can:
 
-You can view its status, monitoring KPIs, logs, configuration, fix levels, etc.
-Everything you can do with Integration Server running on a VM.
+* View Integration Server container runtime status and monitoring KPIs
+* View and dowload logs
+* Administer triggers
+* View configuration
 
-You can even run simple smoke tests against managed containers using Command Central API
-to verify successful setup:
+Using Command Central API and CLI:
+
+* You can run simple smoke tests to verify successful setup. See 'test' container command in docker-compose.yml for details.
 
 ```bash
 docker-compose run --rm test
 ```
-
-> See 'test' container command in docker-compose.yml for details.
 
 Congratulations!
 
