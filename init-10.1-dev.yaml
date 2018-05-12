@@ -2,14 +2,25 @@ alias: init
 
 repositories:
   product:
-    products:
-      host: aquarius-bg.eur.ad.sag
-      name: 101oct2017_SIC      
-      username: latest
-      password: latest
-  fix:
+    products:           
+      location: http://sdc.softwareag.com/dataservewebM101/repository/
+      username: "$EMPOWER_USR"
+      password: "$EMPOWER_PSW"
+  fix:     
     fixes:
-      host: aquarius-bg.eur.ad.sag
-      name: GA_Fix_Repo
-      username: sum
-      password: sum 
+      location: http://sdc.softwareag.com/updates/prodRepo
+      username: "$EMPOWER_USR"
+      password: "$EMPOWER_PSW"
+
+  # product:
+  #   products:
+  #     host: aquarius-bg.eur.ad.sag
+  #     name: 101oct2017_SIC      
+  #     username: latest
+  #     password: latest
+  # fix:
+  #   fixes:
+  #     host: aquarius-bg.eur.ad.sag
+  #     name: GA_Fix_Repo
+  #     username: sum
+  #     password: sum 
