@@ -8,31 +8,25 @@ pipeline {
     }
     environment {
         COMPOSE_PROJECT_NAME = 'sagdevopsccdockerbuilder'
+        RELEASE = '10.1'
     } 
     stages {
         stage("Simple") {
-            environment {
-                COMPOSE_FILE = 'simple.yml'
-            }            
             steps {
-                sh 'docker-compose build'
+                sh 'envsubst < init-$RELEASE.yaml > init.yaml && cat init.yaml'
+                sh 'docker-compose build simple'
+                sh 'docker-compose build unmanaged'
+                sh 'docker-compose build managed'
+                sh 'docker images | grep msc'
+                sh 'docker-compose run --rm init'
+                sh 'docker-compose up -d managed'
+                sh 'docker-compose run --rm test'
             }
-        }
-        stage("Unmanaged") {
-            environment {
-                COMPOSE_FILE = 'unmanaged.yml'
-            }            
-            steps {
-                sh 'docker-compose build'
+            post {
+                always {
+                    sh 'docker-compose logs'
+                    sh 'docker-compose down'
+                }
             }
-        }    
-        stage("Managed") {
-            environment {
-                COMPOSE_FILE = 'managed.yml'
-            }            
-            steps {
-                sh 'docker-compose build'
-            }
-        }    
     }
 }
