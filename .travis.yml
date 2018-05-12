@@ -13,7 +13,8 @@ before_install:
 
 script: 
   - docker-compose build simple
-  - docker-compose build unmanaged managed
+  - docker-compose build unmanaged 
+  - docker-compose build managed
   - docker images | grep msc
   - docker-compose run --rm init
   - docker-compose up -d managed
