@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage("Build") {
             steps {
-                sh 'envsubst < init-$RELEASE.yaml > init.yaml && cat init.yaml'
+                sh 'envsubst < init-$RELEASE-dev.yaml > init.yaml && cat init.yaml'
                 sh 'docker-compose build simple'
                 sh 'docker-compose build unmanaged'
                 sh 'docker-compose build managed'
