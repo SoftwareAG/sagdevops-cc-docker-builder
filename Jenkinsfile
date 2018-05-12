@@ -5,7 +5,7 @@ pipeline {
     environment {
         COMPOSE_PROJECT_NAME = 'sagdevopsccdockerbuilder'
         RELEASE = '10.1'
-        DOCKER = credentals('docker')
+        DOCKER = credentials('docker')
         EMPOWER = credentials('empower')
     } 
     stages {
