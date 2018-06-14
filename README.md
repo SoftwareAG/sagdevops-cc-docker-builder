@@ -9,6 +9,10 @@ Command Central Docker Builder is an tool provided by Software AG
 on [Docker Store](https://store.docker.com/images/softwareag-commandcentral). It leverages Command Central templates to run
 provisioning operations during Docker image build, driven from a standard Dockerfile.
 
+## Requiremements
+
+* Docker Engine 17.05 or newer with support for [multistage builds](https://docs.docker.com/develop/develop-images/multistage-build/)
+
 ## Configuration
 
 Login to Docker Store with your Docker ID, open https://store.docker.com/images/softwareag-commandcentral and accept license agreement to get access
