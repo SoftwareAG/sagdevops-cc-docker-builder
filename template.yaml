@@ -2,8 +2,8 @@ alias: container
 
 templates:
   msc-server:
-    fixes: 
-      - wMFix.integrationServer.Core
+    # fixes: 
+    #   - wMFix.integrationServer.Core
     products:
       MSC:
         default: 
