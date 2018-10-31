@@ -1,5 +1,7 @@
 # Command Central Docker Builder Example
 
+[![Build Status](https://travis-ci.org/SoftwareAG/sagdevops-cc-docker-builder.svg?branch=master)](https://travis-ci.org/SoftwareAG/sagdevops-cc-docker-builder)
+
 This project demonstrates how to build Docker images using
 Command Central Docker Builder.
 
