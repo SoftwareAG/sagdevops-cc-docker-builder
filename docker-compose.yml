@@ -1,79 +1,52 @@
-version: "3.0"
+version: "3.4"
 
 services:
-  simple:
-    image: simple/msc:$RELEASE
+  hello:
+    image: softwareag/hello:10.3
     build:
       context: .
-      dockerfile: Dockerfile.simple
-      args: 
-        - RELEASE
-    # ports:
-    #   - "5551:5555"      
-    # volumes: 
-    #   - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
-    # links:
-    #   - cc
-    # environment:
-    #   - CC_SERVER=cc
-    #   - CC_AUTO_REGISTER=1
+      args:
+        - BUILDER_IMAGE=store/softwareag/commandcentral-builder:10.3  # Use the latest available builer image
+        - NODE_IMAGE=store/softwareag/commandcentral-node:10.3 # Use node image for the target release
+        - REPO_PRODUCT_URL=https://sdc.softwareag.com/dataservewebM103/repository # product repository must match target release
+        - REPO_FIX_URL=https://sdc.softwareag.com/updates/prodRepo # fix repository must have fixes for the target release
+        - REPO_USERNAME=${EMPOWER_USR} # repo credentials
+        - REPO_PASSWORD=${EMPOWER_PSW} # repo credentials
+        - BASE_IMAGE=centos:7 # base image
+        # - BASE_IMAGE=openjdk:8-jre-slim
+        - __hello_name=Docker103 # pass parameter values to the template at build time
+    ports:
+      - 8092
 
-  unmanaged:
-    image: unmanaged/msc:$RELEASE
+  hello-101:
+    image: softwareag/hello:10.1
     build:
       context: .
-      dockerfile: Dockerfile.unmanaged
-      args: 
-        - RELEASE
+      args:
+        - BUILDER_IMAGE=store/softwareag/commandcentral-builder:10.3 # Use the latest available builer image
+        - NODE_IMAGE=store/softwareag/commandcentral:10.1-node # Use node image for the target release
+        - REPO_PRODUCT_URL=https://sdc.softwareag.com/dataservewebM101/repository # product repository must match target release
+        - REPO_FIX_URL=https://sdc.softwareag.com/updates/prodRepo # fix repository must have fixes for the target release
+        - REPO_USERNAME=${EMPOWER_USR} # repo credentials
+        - REPO_PASSWORD=${EMPOWER_PSW} # repo credentials
+        - BASE_IMAGE=centos:7 # base image
+        # - BASE_IMAGE=openjdk:8-jre-slim
+        - __hello_name=Docker101 # pass parameter values to the template at build time
     ports:
-      - "5552:5555"
-    # volumes: 
-    #   - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
- 
-  managed:
-    image: managed/msc:$RELEASE
-    build:
-      context: .    
-      dockerfile: Dockerfile.managed
-      args: 
-        - RELEASE
-    #hostname: msc
-    ports:
-      - "5553:5555" # http://localhost:5553
-    environment:
-      - CC_SERVER=cc
-      - CC_AUTO_REGISTER=1    
-    # volumes: 
-    #   - ./licenseKey.xml:/opt/softwareag/IntegrationServer/instances/default/config/licenseKey.xml 
-    links:
-      - cc      
-
-  cc:
-    image: store/softwareag/commandcentral:$RELEASE-server
-    ports:
-      - "8091:8091" # http://localhost:8091
-
-  init:
-    image: store/softwareag/commandcentral:$RELEASE-server
-    environment:
-      - CC_SERVER=cc
-    command: sagcc list landscape nodes local -e ONLINE -w 240
-    links:
-      - cc
+      - 8092
 
   test:
-    image: store/softwareag/commandcentral:$RELEASE-server
+    image: store/softwareag/commandcentral-client:10.3
+    command: sagcc list inventory products --wait-for-cc --wait 120 -e 10.3
     environment:
-      - CC_SERVER=cc
-    links:
-      - managed
-      - cc
-    command: >
-      bash -c '
-      echo "Checking managed container auto registration ..." &&
-      sagcc list landscape nodes properties=alias,description -e "Auto registered docker node" &&
-      echo "Checking MSC instance ..." &&
-      sagcc list inventory components -e integrationServer-default -w 240 &&
-      echo "Checking MSC state ..." &&
-      sagcc list monitoring state -e "Response Time" -w 240
-      '
+      - CC_SERVER=http://hello:8092/spm
+    depends_on:
+      - hello
+
+  test-101:
+    image: store/softwareag/commandcentral-client:10.3
+    command: sagcc list inventory products --wait-for-cc --wait 120 -e 10.1
+    environment:
+      - CC_SERVER=http://hello-101:8092/spm
+    depends_on:
+      - hello-101
