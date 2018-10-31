@@ -29,8 +29,8 @@ ENV SAG_HOME=/opt/softwareag
 # get the managed node
 COPY --from=node --chown=1724:1724 $SAG_HOME/ $SAG_HOME/
 
-# build-time template parameter: hello.world
-ARG __hello_world=default
+# build-time template parameter: hello.name
+ARG __hello_name=default
 
 # run-time container init parameter
 ENV HELLO_NAME=default

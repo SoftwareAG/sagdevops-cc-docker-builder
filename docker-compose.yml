@@ -14,7 +14,7 @@ services:
         - REPO_PASSWORD=${EMPOWER_PSW} # repo credentials
         - BASE_IMAGE=centos:7 # base image
         # - BASE_IMAGE=openjdk:8-jre-slim
-        - __hello_world=Docker103 # pass parameter values to the template at build time
+        - __hello_name=Docker103 # pass parameter values to the template at build time
     ports:
       - 8092
 
@@ -31,7 +31,7 @@ services:
         - REPO_PASSWORD=${EMPOWER_PSW} # repo credentials
         - BASE_IMAGE=centos:7 # base image
         # - BASE_IMAGE=openjdk:8-jre-slim
-        - __hello_world=Docker101 # pass parameter values to the template at build time
+        - __hello_name=Docker101 # pass parameter values to the template at build time
     ports:
       - 8092
 
