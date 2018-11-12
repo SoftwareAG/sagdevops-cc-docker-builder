@@ -12,7 +12,7 @@ on [Docker Store](https://store.docker.com/images/softwareag-commandcentral).
 
 Please see [Moving to Containers with Command Central Builder for Docker](http://go.softwareag.com/gB0GfoN0U30lJP0BD002b7h).
 
-## Requiremements
+## Requirements
 
 * Docker Engine 17.05 or newer with support for [multi-stage builds](https://docs.docker.com/develop/develop-images/multistage-build/)
 
