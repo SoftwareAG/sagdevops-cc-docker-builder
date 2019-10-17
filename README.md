@@ -10,7 +10,7 @@ Command Central Docker Builder.
 Command Central Docker Builder is a tool provided by Software AG
 on [Docker Store](https://store.docker.com/images/softwareag-commandcentral).
 
-Please see [Moving to Containers with Command Central Builder for Docker](http://go.softwareag.com/gB0GfoN0U30lJP0BD002b7h).
+Please see [Moving to Containers with Command Central Builder for Docker](http://techcommunity.softwareag.com/techniques-blog/-/blogs/moving-to-containers-with-command-central-builder-for-docker).
 
 ## Requirements
 
@@ -163,6 +163,10 @@ git config --global core.autocrlf false
 
 _______________
 Contact us at [TECHcommunity](mailto:technologycommunity@softwareag.com?subject=Github/SoftwareAG) if you have any questions.
+_______________
+For more information you can Ask a Question in the [TECHcommunity Forums](http://techcommunity.softwareag.com/home/-/product/name/command-central).
+
+You can find additional information in the [Software AG TECHcommunity](http://tech.forums.softwareag.com/techjforum/forums/list.page?product=command-central).
 _______________
 DISCLAIMER
 These tools are provided as-is and without warranty or support. They do not constitute part of the Software AG product suite. Users are free to use, fork and modify them, subject to the license agreement. While Software AG welcomes contributions, we cannot guarantee to include every contribution in the master project.
