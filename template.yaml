@@ -1,9 +1,0 @@
-alias: hello-world
-
-environments:
-  default:
-    say.hello: ${}     # REQUIRED: value must be provided at build time
-    hello.name: World  # OPTIONAL: value may be provided at build time
-    actions:
-      hello:
-        script: echo "************** ${say.hello} ${hello.name}! ***************"
